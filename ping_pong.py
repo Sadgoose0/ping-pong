@@ -12,6 +12,8 @@ font2 = font.SysFont('Arial', 36)
 #нам нужны такие картинки:
 img_hero = "rocket.png" #герой
 img_enemy = "ufo.png" #враг
+img_racket = "racket.png"
+img_tennis_ball = "tennis_ball.png"
 
 #класс-родитель для других спрайтов
 class GameSprite(sprite.Sprite):
@@ -59,23 +61,27 @@ win_width = 700
 win_height = 500
 display.set_caption("Ping-pong")
 window = display.set_mode((win_width, win_height))
-window.fill((255, 0, 70))
 
-class Racket_1(GameSprite):
+
+class RacketLeft(GameSprite):
     def update(self):
         keys = key.get_pressed()
-        if keys[K_W] and self.rect.y > 5:
+        if keys[K_w] and self.rect.y > 5:
             self.rect.y -= self.speed
-        if keys[K_S] and self.rect.y < win_height - 80:
+        if keys[K_s] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
 
-class Racket_2(GameSprite):
+
+class RacketRight(GameSprite):
     def update(self):
         keys = key.get_pressed()
         if keys[K_UP] and self.rect.y > 5:
             self.rect.y -= self.speed
         if keys[K_DOWN] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
+
+racket_left = RacketLeft(img_racket, 100, 100, 25, 50, 10)
+racket_right = RacketRight(img_racket, 400, 100, 25, 50, 10)
 
 #переменная "игра закончилась": как только там True, в основном цикле перестают работать спрайты
 finish = False
@@ -89,9 +95,13 @@ while run:
             run = False
             
  #сама игра: действия спрайтов, проверка правил игры, перерисовка
-    if not finish:
+    #if not finish:
         #обновляем фон
-        window.fill((255, 0, 70))
+    window.fill((255, 0, 70))
+    racket_left.update()
+    racket_right.update()
 
-        clock.tick(40)
-        display.update()
+    racket_left.reset()
+    racket_right.reset()
+    clock.tick(40)
+    display.update()
