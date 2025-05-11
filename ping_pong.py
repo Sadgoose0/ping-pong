@@ -13,7 +13,7 @@ font2 = font.SysFont('Arial', 36)
 img_hero = "rocket.png" #герой
 img_enemy = "ufo.png" #враг
 img_racket = "racket.png"
-img_tennis_ball = "tennis_ball.png"
+img_tennis_ball = "tenis_ball.png"
 
 #класс-родитель для других спрайтов
 class GameSprite(sprite.Sprite):
@@ -22,11 +22,9 @@ class GameSprite(sprite.Sprite):
         #вызываем конструктор класса (Sprite):
         sprite.Sprite.__init__(self)
  
- 
         #каждый спрайт должен хранить свойство image - изображение
         self.image = transform.scale(image.load(player_image), (size_x, size_y))
         self.speed = player_speed
- 
  
         #каждый спрайт должен хранить свойство rect - прямоугольник, в который он вписан
         self.rect = self.image.get_rect()
@@ -64,24 +62,25 @@ window = display.set_mode((win_width, win_height))
 
 
 class RacketLeft(GameSprite):
-    def update(self):
+    def update_l(self):
         keys = key.get_pressed()
         if keys[K_w] and self.rect.y > 5:
             self.rect.y -= self.speed
-        if keys[K_s] and self.rect.y < win_height - 80:
+        if keys[K_s] and self.rect.y < win_height - 95:
             self.rect.y += self.speed
 
 
 class RacketRight(GameSprite):
-    def update(self):
+    def update_r(self):
         keys = key.get_pressed()
         if keys[K_UP] and self.rect.y > 5:
             self.rect.y -= self.speed
-        if keys[K_DOWN] and self.rect.y < win_height - 80:
+        if keys[K_DOWN] and self.rect.y < win_height - 95:
             self.rect.y += self.speed
 
-racket_left = RacketLeft(img_racket, 100, 100, 25, 50, 10)
-racket_right = RacketRight(img_racket, 400, 100, 25, 50, 10)
+racket_left = RacketLeft(img_racket, 75, 100, 25, 100, 10)
+racket_right = RacketRight(img_racket, 625, 100, 25, 100, 10)
+tennis_ball = GameSprite(img_tennis_ball, 200, 200, 50, 50, 10)
 
 #переменная "игра закончилась": как только там True, в основном цикле перестают работать спрайты
 finish = False
@@ -93,15 +92,17 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+
             
  #сама игра: действия спрайтов, проверка правил игры, перерисовка
     #if not finish:
         #обновляем фон
     window.fill((255, 0, 70))
-    racket_left.update()
-    racket_right.update()
+    racket_left.update_l()
+    racket_right.update_r()
 
     racket_left.reset()
     racket_right.reset()
+    tennis_ball.reset()
     clock.tick(40)
     display.update()
