@@ -59,7 +59,8 @@ win_width = 700
 win_height = 500
 display.set_caption("Ping-pong")
 window = display.set_mode((win_width, win_height))
-
+speed_x = 3
+speed_y = 3
 
 class RacketLeft(GameSprite):
     def update_l(self):
@@ -68,7 +69,6 @@ class RacketLeft(GameSprite):
             self.rect.y -= self.speed
         if keys[K_s] and self.rect.y < win_height - 95:
             self.rect.y += self.speed
-
 
 class RacketRight(GameSprite):
     def update_r(self):
@@ -82,6 +82,7 @@ racket_left = RacketLeft(img_racket, 75, 100, 25, 100, 10)
 racket_right = RacketRight(img_racket, 625, 100, 25, 100, 10)
 tennis_ball = GameSprite(img_tennis_ball, 200, 200, 50, 50, 10)
 
+
 #переменная "игра закончилась": как только там True, в основном цикле перестают работать спрайты
 finish = False
 #основной цикл игры:
@@ -93,14 +94,19 @@ while run:
         if e.type == QUIT:
             run = False
 
-            
- #сама игра: действия спрайтов, проверка правил игры, перерисовка
-    #if not finish:
-        #обновляем фон
+    tennis_ball.rect.x += speed_x
+    tennis_ball.rect.y += speed_y
+
+    if tennis_ball.rect.y >= 450 or tennis_ball.rect.y <= 0:
+        speed_y *= -1
+
+    if sprite.collide_rect(tennis_ball, racket_left) or sprite.collide_rect(tennis_ball, racket_right):
+        speed_x *= -1
+
+
     window.fill((255, 0, 70))
     racket_left.update_l()
     racket_right.update_r()
-
     racket_left.reset()
     racket_right.reset()
     tennis_ball.reset()
