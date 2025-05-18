@@ -3,11 +3,11 @@ from random import randint
 from time import time as timer
 #подгружаем отдельно функции для работы со шрифтом
 font.init()
-font1 = font.SysFont('Arial', 80)
-win = font1.render('YOU WIN!', True, (255, 255, 255))
-lose = font1.render('YOU LOSE!', True, (180, 0, 0))
-
-font2 = font.SysFont('Arial', 36)
+font1 = font.Font(None, 80)
+winl = font1.render('LEFT PLAYER WIN!', True, (255, 255, 255))
+winr = font1.render('RIGHT PLAYER WIN!', True, (255, 255, 255))
+losel = font1.render('LEFT PLAYER LOSE!', True, (180, 0, 0))
+loser = font1.render('RIGHT PLAYER LOSE!', True, (180, 0, 0))
 
 #нам нужны такие картинки:
 img_hero = "rocket.png" #герой
@@ -54,7 +54,6 @@ class Enemy(GameSprite):
             self.rect.x = randint(80, win_width - 80)
             self.rect.y = 0
 
-
 win_width = 700
 win_height = 500
 display.set_caption("Ping-pong")
@@ -82,7 +81,6 @@ racket_left = RacketLeft(img_racket, 75, 100, 25, 100, 10)
 racket_right = RacketRight(img_racket, 625, 100, 25, 100, 10)
 tennis_ball = GameSprite(img_tennis_ball, 200, 200, 50, 50, 10)
 
-
 #переменная "игра закончилась": как только там True, в основном цикле перестают работать спрайты
 finish = False
 #основной цикл игры:
@@ -93,22 +91,31 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+    if not finish:
 
-    tennis_ball.rect.x += speed_x
-    tennis_ball.rect.y += speed_y
+        tennis_ball.rect.x += speed_x
+        tennis_ball.rect.y += speed_y
 
-    if tennis_ball.rect.y >= 450 or tennis_ball.rect.y <= 0:
-        speed_y *= -1
+        if tennis_ball.rect.y >= win_height - 50 or tennis_ball.rect.y <= 0:
+            speed_y *= -1
 
-    if sprite.collide_rect(tennis_ball, racket_left) or sprite.collide_rect(tennis_ball, racket_right):
-        speed_x *= -1
+        if sprite.collide_rect(tennis_ball, racket_left) or sprite.collide_rect(tennis_ball, racket_right):
+            speed_x *= -1
 
+        window.fill((255, 0, 70))
+        racket_left.update_l()
+        racket_right.update_r()
+        racket_left.reset()
+        racket_right.reset()
+        tennis_ball.reset()
 
-    window.fill((255, 0, 70))
-    racket_left.update_l()
-    racket_right.update_r()
-    racket_left.reset()
-    racket_right.reset()
-    tennis_ball.reset()
+        if tennis_ball.rect.x <= 0:
+            window.blit(losel, (70, 200))
+            finish = True
+
+        if tennis_ball.rect.x >= win_width - 25:
+            window.blit(loser, (70, 200))
+            finish = True
+
     clock.tick(40)
     display.update()
