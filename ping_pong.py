@@ -14,6 +14,9 @@ img_hero = "rocket.png" #герой
 img_enemy = "ufo.png" #враг
 img_racket = "racket.png"
 img_tennis_ball = "tenis_ball.png"
+img_background = "fitness-playing-tennis-double-png.png"
+img_tennis_racket = "tennis-racket-png.png"
+img_tennis_racket_sports = "tennis-racket-sports.png"
 
 #класс-родитель для других спрайтов
 class GameSprite(sprite.Sprite):
@@ -58,6 +61,7 @@ win_width = 700
 win_height = 500
 display.set_caption("Ping-pong")
 window = display.set_mode((win_width, win_height))
+background = transform.scale(image.load(img_background), (win_width, win_height))
 speed_x = 3
 speed_y = 3
 
@@ -77,8 +81,8 @@ class RacketRight(GameSprite):
         if keys[K_DOWN] and self.rect.y < win_height - 95:
             self.rect.y += self.speed
 
-racket_left = RacketLeft(img_racket, 75, 100, 25, 100, 10)
-racket_right = RacketRight(img_racket, 625, 100, 25, 100, 10)
+racket_left = RacketLeft(img_tennis_racket_sports, 75, 100, 25, 100, 10)
+racket_right = RacketRight(img_tennis_racket_sports, 625, 100, 25, 100, 10)
 tennis_ball = GameSprite(img_tennis_ball, 200, 200, 50, 50, 10)
 
 #переменная "игра закончилась": как только там True, в основном цикле перестают работать спрайты
@@ -91,6 +95,7 @@ while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
+
     if not finish:
 
         tennis_ball.rect.x += speed_x
@@ -102,7 +107,7 @@ while run:
         if sprite.collide_rect(tennis_ball, racket_left) or sprite.collide_rect(tennis_ball, racket_right):
             speed_x *= -1
 
-        window.fill((255, 0, 70))
+        window.blit(background, (0, 0))
         racket_left.update_l()
         racket_right.update_r()
         racket_left.reset()
